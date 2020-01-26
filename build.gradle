@@ -5,7 +5,7 @@ plugins {
   //id 'com.github.johnrengelman.shadow' version '2.0.4'
 }
 
-apply plugin: 'java-library'
+apply plugin: 'java'
 apply plugin: 'eclipse'
 
 sourceCompatibility = targetCompatibility = '11' // Need this here so eclipse task generates correctly.
@@ -36,6 +36,10 @@ configurations {
     all {
         exclude group: 'org.ow2.asm'
     }
+    mcpImplementation.extendsFrom commonImplementation
+    patcherImplementation.extendsFrom commonImplementation
+    userdevImplementation.extendsFrom mcpImplementation
+    implementation.extendsFrom mcpImplementation, patcherImplementation, userdevImplementation
 }
 
 jar {
@@ -68,24 +72,23 @@ wrapper {
 }
 
 dependencies {
-    implementation gradleApi()
-    
-    implementation 'com.cloudbees:diff4j:1.2'
-    implementation 'commons-io:commons-io:2.4'
-    implementation 'com.github.jponge:lzma-java:1.3' // replaces the LZMA binary
-    implementation 'com.nothome:javaxdelta:2.0.1' // GDIFF implementation for BinPatches
-    implementation 'com.google.code.gson:gson:2.8.5'
-    implementation 'com.google.guava:guava:26.0-jre'
-    implementation 'de.siegmar:fastcsv:1.0.2'
-    implementation 'net.minecraftforge:artifactural:1.0.+'
-    implementation 'org.apache.maven:maven-artifact:3.6.0'
-    implementation 'org.apache.httpcomponents:httpclient:4.3.3'
+    commonImplementation gradleApi()
+    commonImplementation 'com.cloudbees:diff4j:1.2'
+    commonImplementation 'commons-io:commons-io:2.4'
+    commonImplementation 'com.github.jponge:lzma-java:1.3' // replaces the LZMA binary
+    commonImplementation 'com.nothome:javaxdelta:2.0.1' // GDIFF implementation for BinPatches
+    commonImplementation 'com.google.code.gson:gson:2.8.5'
+    commonImplementation 'com.google.guava:guava:26.0-jre'
+    commonImplementation 'de.siegmar:fastcsv:1.0.2'
+    commonImplementation 'net.minecraftforge:artifactural:1.0.+'
+    commonImplementation 'org.apache.maven:maven-artifact:3.6.0'
+    commonImplementation 'org.apache.httpcomponents:httpclient:4.3.3'
 
-    implementation sourceSets.common.output
-    implementation sourceSets.mcp.output
-    implementation sourceSets.common.output
-    implementation sourceSets.mcp.output
-    implementation sourceSets.common.output
+    mcpImplementation sourceSets.common.output
+    patcherImplementation sourceSets.mcp.output
+    patcherImplementation sourceSets.common.output
+    userdevImplementation sourceSets.mcp.output
+    userdevImplementation sourceSets.common.output
 }
 
 //Gradle doesn't add it's own source when doing the API. So lets hack it in!
