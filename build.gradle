@@ -6,6 +6,7 @@ plugins {
 }
 
 apply plugin: 'java-library'
+apply plugin: 'maven-publish'
 apply plugin: 'eclipse'
 
 sourceCompatibility = targetCompatibility = '11' // Need this here so eclipse task generates correctly.
@@ -102,6 +103,27 @@ project.extensions.eclipse.classpath.file.whenMerged { Classpath cp ->
             if (type == 'api') type = 'core-api' //Gradle name is different for cores
             if (type == '') type = 'core'
             entry.sourcePath = new FileReferenceFactory().fromPath(gradleSrc + type)
+        }
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            if (project.hasProperty('forgeMavenPassword')) {
+                credentials {
+                    username project.properties.forgeMavenUser
+                    password project.properties.forgeMavenPassword
+                }
+                url 'https://files.minecraftforge.net/maven/manage/upload'
+            } else {
+                url 'file://' + rootProject.file('repo').getAbsolutePath()
+            }
         }
     }
 }
