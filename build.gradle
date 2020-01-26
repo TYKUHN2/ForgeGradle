@@ -8,9 +8,9 @@ plugins {
 apply plugin: 'java-library'
 apply plugin: 'eclipse'
 
-sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+sourceCompatibility = targetCompatibility = '11' // Need this here so eclipse task generates correctly.
 compileJava {
-    sourceCompatibility = targetCompatibility = '1.8'
+    sourceCompatibility = targetCompatibility = '11'
 }
 
 group = 'net.minecraftforge.gradle'
